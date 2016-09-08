@@ -6,23 +6,7 @@ const TempHumidity = mongoose.model('TempHumidity')
 let Netcat = require('node-netcat');
 let server = Netcat.server(5000);
 
-module.exports = function (app) {
-  app.use('/', router);
-};
-
-router.get('/', function (req, res, next) {
-  TempHumidity.find(function (err, measures) {
-    if (err) return next(err);
-    res.render('index', {
-      title: 'Temperarue and humidity measurments',
-      measures: measures
-    })
-  })
-})
-
-router.get('/add', function (req, res, next) {
-
-  server.on('ready', function() {
+server.on('ready', function() {
     console.log('server ready');
   });
 
@@ -47,6 +31,23 @@ router.get('/add', function (req, res, next) {
   });
 
   server.listen(); // start to listening
+
+
+module.exports = function (app) {
+  app.use('/', router);
+};
+
+router.get('/', function (req, res, next) {
+  TempHumidity.find(function (err, measures) {
+    if (err) return next(err);
+    res.render('index', {
+      title: 'Temperarue and humidity measurments',
+      measures: measures
+    })
+  })
+})
+
+router.get('/add', function (req, res, next) {
 
   let tempHum = new TempHumidity({
     temp: '22',
